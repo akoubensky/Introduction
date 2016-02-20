@@ -22,11 +22,6 @@ public class Substrings {
 	// Используется в алгоритме Рабина - Карпа.
     private static final long q = 36028797018963913L;
 
-    // Длина таблицы символов и соответствующая hash-функция для символов, которые
-    // используются в алгоритме Бойера - Мура.
-    private static final int shLen = 256;
-    private static int hash(char c) { return c & 0xFF; }
-
     /**
      * Алгоритм "наивного" поиска подстроки в строке.
      *
@@ -55,6 +50,10 @@ public class Substrings {
      * некоторой hash-функции, а затем для фрагментов исходной строки также вычисляются
      * значения этой же hash-функции. Если значения hash-функций совпали, то совпадение
      * образца с фрагментом исходной строки проверяется посимвольно.
+     *
+     * Michael Oser Rabin, Израиль
+     * Richard Manning Karp, США
+     * 1987
      *
      * @param where Исходная строка, в которой ищут.
      * @param what  Подстрока, которую ищут.
@@ -105,10 +104,15 @@ public class Substrings {
     }
 
     /**
-     * Алгоритм Бойена - Мура поиска подстроки в строке. Поиск образца происходит, начиная
-     * каждый раз с конца образца. При несовпадении символов вычисляется максимально
+     * Алгоритм Бойера - Мура - Хорспула поиска подстроки в строке. Поиск образца происходит,
+     * начиная каждый раз с конца образца. При несовпадении символов вычисляется максимально
      * возможный сдвиг образца, который вычисляется по предварительно построенной таблице
      * символов образца, содержащей расстояния от этих символов до конца образца.
+     *
+     * Robert Stephen Boyer, США
+     * J Strother Moore, США
+     * Nigel Horspool, Канада
+     * 1980
      *
      * @param where Исходная строка, в которой ищут.
      * @param what  Подстрока, которую ищут.
@@ -217,13 +221,13 @@ public class Substrings {
     	int indNotFound = simpleSearch(where, whatNotFound);
     	System.out.println("Наивный алгоритм работает " + 
     			(indNotFound == -1 && isSubstring(where, whatExists, indFound) ? "правильно" : "неправильно"));
-    	
-    	indFound = rabinKarp(where, whatExists);
-    	indNotFound = rabinKarp(where, whatNotFound);
-    	System.out.println("Алгоритм Рабина - Карпа работает " + 
-    			(indNotFound == -1 && isSubstring(where, whatExists, indFound) ? "правильно" : "неправильно"));
 
-    	indFound = boyerMoore(where, whatExists);
+        indFound = rabinKarp(where, whatExists);
+        indNotFound = rabinKarp(where, whatNotFound);
+        System.out.println("Алгоритм Рабина - Карпа работает " +
+                (indNotFound == -1 && isSubstring(where, whatExists, indFound) ? "правильно" : "неправильно"));
+
+        indFound = boyerMoore(where, whatExists);
     	indNotFound = boyerMoore(where, whatNotFound);
     	System.out.println("Алгоритм Бойера - Мура работает " + 
     			(indNotFound == -1 && isSubstring(where, whatExists, indFound) ? "правильно" : "неправильно"));
