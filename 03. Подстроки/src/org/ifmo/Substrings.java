@@ -77,8 +77,8 @@ public class Substrings {
         long p = 0;     // hash-функция подстроки - вычисляется один раз
         long t = 0;     // hash-функция очередного фрагмента подстроки
         for (int k = 0; k < m; k++) {
-            p = ((p << 8) | (byte)what.charAt(k)) % q;
-            t = ((t << 8) | (byte)where.charAt(k)) % q;
+            p = ((p << 8) + (what.charAt(k) & 255)) % q;
+            t = ((t << 8) + (where.charAt(k) & 255)) % q;
         }
 
         // Внешний цикл по исходной строке
@@ -97,7 +97,9 @@ public class Substrings {
                 return i;
             } else if (i < n-m) {
                 // сдвиг по исходной строке
-                t = (((t - h * (byte)where.charAt(i)) << 8) | (byte)where.charAt(i+m)) % q;
+                t = (t - h * (where.charAt(i) & 255)) % q;
+                if (t < 0) t += q;
+                t = ((t << 8) + (where.charAt(i+m) & 255)) % q;
             }
         }
         return -1;
